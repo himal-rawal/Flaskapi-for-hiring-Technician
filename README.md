@@ -1,3 +1,4 @@
+
 # Api_Hireme
 
 We are doing college project whose goal is to hire technician. For that We are creating  Api to connect our frontend with backend. 
@@ -12,7 +13,17 @@ We are doing college project whose goal is to hire technician. For that We are c
 
 ## Api Documentation :
 
-### 1. Register User
+## Table Of Content:
+- [1. Register Employee](#1-register-employee)
+- [2. View employees](#2-view-employees-)
+- [3. Get Single Employee](#3-get-single-employee-)
+- [3. To Update Employee Info](#3-to-update-employee-info-)
+- [4. To Delete Employee](#4-to-delete-employee-)
+- [5. Login for Employee](#5-login-for-employee)
+
+
+
+### 1. Register Employee
 **Request**
 ```
 POST /api/register/employee HTTP/1.1
@@ -35,7 +46,7 @@ Postman-Token: 84b21adf-5ea7-b9f7-915f-2f506e64cddd
 **Response** 
 ``` "Employee added sucessfully" ```
 
-### 2. View employees:
+### 2. View employees
 
 **Request**
 
@@ -61,7 +72,7 @@ Postman-Token: 44a64360-8999-1515-2e43-cf81e9014cf9
 ]
 ```
 
-### 3. Get Single Employee:
+### 3. Get Single Employee
 **Request**
 ```
 GET /api/view/employee/6 HTTP/1.1
@@ -84,7 +95,7 @@ Postman-Token: 65d95c1e-4ee5-1c4f-b698-b3737fd0b926
 ]
 ```
 
-### 3. To Update Employee Info:
+### 3. To Update Employee Info
 **Request**
 ```
 PUT /api/update/employee HTTP/1.1
@@ -108,7 +119,7 @@ Postman-Token: a37cbb6b-fe7a-8263-8e6e-993a83aa3331
 **Response**
 ``` If user exist  than information updated Sucessfully ```
 
-### 4. To Delete Employee:
+### 4. To Delete Employee
 **Request**
 ```
 DELETE /api/delete/employee/1 HTTP/1.1
