@@ -22,6 +22,7 @@ We are doing college project whose goal is to hire technician. For that We are c
 - [5. Login for Employee](#5-login-for-employee)
 
 
+(Note admin and  employee will share same database but it there is coloumn in the database named **admin**  which is TINYINT data type . and we will set ** admin=1** in database manually to make any employee admin. Default value will be 0 i.e false.)
 
 ### 1. Register Employee
 **Request**
@@ -157,8 +158,8 @@ Postman-Token: 4660f824-f39d-c793-b74c-1f51ca67a17b
 
  :pouting_man:` people Contributing to this project : `
 
-- [Mobambo](https://github.com/Mobambo) :nepal:
-- [Ankit Kumar](https://github.com/Robust-sketch) :nepal:
-- [Babin Manyal](https://github.com/BabinManyal)  :nepal:
-- [Chandan Kumar](https://github.com/)  :india:
-- [Santosh](https://github.com/)  :india:
+- [Mobambo](https://github.com/Mobambo) 
+- [Ankit Kumar](https://github.com/Robust-sketch) 
+- [Babin Manyal](https://github.com/BabinManyal)  
+- [Chandan Kumar](https://github.com/)  
+- [Santosh](https://github.com/)  
