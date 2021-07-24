@@ -1,4 +1,5 @@
 import pymysql
+from functools import  wraps
 import jwt
 import uuid
 import  datetime
@@ -8,6 +9,31 @@ from config import mysql
 from flask import jsonify
 from flask import flash, request
 app.config['SECRET_KEY']='confidential'
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args,**kwargs):
+        token= None
+        if 'x-acess-token' in request.headers:
+            token=request.headers['x-acess-token']
+        if not token:
+            return  jsonify("token not found")
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        try:
+            data=jwt.decode(token, app.config['SECRET_KEY'],algorithms=["HS256"])
+            cursor.execute('SELECT  * FROM hireme_emp  WHERE id=%s ', (data['id'],))
+            row=cursor.fetchone()
+            current_user = row['id']
+        except Exception as  e:
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
+        return  f(current_user, *args, **kwargs)
+    return decorated
+
+
 @app.route('/api/register/employee', methods=['POST'])
 def register_user():
     try:
@@ -47,7 +73,7 @@ def view_employee():
     try:
         conn=mysql.connect()
         cursor=conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT name,skill,experience,gender,email,phone,address FROM hireme_emp")
+        cursor.execute("SELECT name,skill,experience,gender,email,phone,address FROM hireme_emp WHERE admin=0")
         rows=cursor.fetchall()
         resp=jsonify(rows)
         resp.status_code=200
@@ -61,12 +87,12 @@ def view_employee():
 
 #------------------------------------------------------------------------------------
 #get Specific employee  with their id
-@app.route('/api/user/<int:id>', methods=['GET'])
+@app.route('/api/view/employee/<int:id>', methods=['GET'])
 def get_specific_user(id):
     try:
         conn=mysql.connect()
         cursor=conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT name,skill,experience,gender,email,phone,address FROM hireme_emp WHERE id=%s",id)
+        cursor.execute("SELECT name,skill,experience,gender,email,phone,address FROM hireme_emp WHERE id=%s", id)
         emprow=cursor.fetchone()
         resp = jsonify(emprow)
         resp.status_code = 200
@@ -162,7 +188,7 @@ def delete_user(id):
         cursor=conn.cursor()
         cursor.execute("DELETE FROM hireme_emp WHERE id-%s", id)
         conn.commit()
-        response=jsonify("Employee Deleted Sucessfully")
+        response=jsonify("If Employee exist on our database than employee deleted Sucessfully")
         response.status_code=200
         return  response
     except Exception as e:
@@ -201,6 +227,25 @@ def create_client():
         cursor.close()
         conn.close()
 
+
+#------------------------------------------------------------------------------------
+#show all admin users
+@app.route('/api/view/addmin')
+@token_required
+def view_addmin(current_user):
+    try:
+        conn=mysql.connect()
+        cursor=conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute("SELECT name,skill,experience,gender,email,phone,address FROM hireme_emp WHERE admin=1")
+        rows=cursor.fetchall()
+        resp=jsonify(rows)
+        resp.status_code=200
+        return  resp
+    except Exception as e:
+        print(e)
+    finally:
+        cursor.close()
+        conn.close()
 
 #------------------------------------------------------------------------------------
 #Error Page
