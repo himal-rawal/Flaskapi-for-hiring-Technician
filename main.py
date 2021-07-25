@@ -23,10 +23,10 @@ def token_required(f):
         try:
             data=jwt.decode(token, app.config['SECRET_KEY'],algorithms=["HS256"])
             cursor.execute('SELECT  * FROM hireme_emp  WHERE id=%s ', (data['id'],))
-            row=cursor.fetchone()
-            current_user = row['id']
-        except Exception as  e:
-            print(e)
+            current_user=cursor.fetchone()
+            #current_user = row['id']
+        except :
+            return  jsonify("token expired or is invalid")
         finally:
             cursor.close()
             conn.close()
@@ -147,10 +147,14 @@ def login():
 #------------------------------------------------------------------------------------
 #update user info
 @app.route('/api/update/employee',methods=['PUT'])
-def update_user_info():
+@token_required
+def update_user_info(current_user):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    i = current_user['id']
     try:
         _json = request.json
-        _id = _json['id']
+        #_id = _json['id']
         _name = _json['name']
         _skill = _json['skill']
         _experience = _json['experience']
@@ -158,11 +162,9 @@ def update_user_info():
         _email = _json['email']
         _phone = _json['phone']
         _address = _json['address']
-        if _id and _name and _skill and _experience and _gender and _email  and _phone and _address and request.method == 'PUT':
-            sqlquery="UPDATE hireme_emp SET name=%s,skill=%s,experience=%s, gender=%s,email=%s,phone=%s,address=%s WHERE id=%s"
-            binddata= (_name, _skill, _experience, _gender, _email, _phone, _address, _id)
-            conn = mysql.connect()
-            cursor = conn.cursor()
+        if  _name and _skill and _experience and _gender and _email  and _phone and _address and request.method == 'PUT':
+            sqlquery="UPDATE hireme_emp SET name=%s,skill=%s,experience=%s, gender=%s,email=%s,phone=%s,address=%s WHERE id="+str(current_user['id'])+""
+            binddata= (_name, _skill, _experience, _gender, _email, _phone, _address)
             cursor.execute(sqlquery, binddata)
             conn.commit()
             response=jsonify("sucess")
@@ -182,11 +184,14 @@ def update_user_info():
 #------------------------------------------------------------------------------------
 #delete  user
 @app.route('/api/delete/employee/<int:id>', methods=['DELETE'])
-def delete_user(id):
+@token_required
+def delete_user(current_user, id):
+    if not current_user['Admin']:
+        return jsonify("you are not authorized to perform this action")
     try:
         conn=mysql.connect()
         cursor=conn.cursor()
-        cursor.execute("DELETE FROM hireme_emp WHERE id-%s", id)
+        cursor.execute("DELETE FROM hireme_emp WHERE id=%s", id)
         conn.commit()
         response=jsonify("If Employee exist on our database than employee deleted Sucessfully")
         response.status_code=200
@@ -233,6 +238,8 @@ def create_client():
 @app.route('/api/view/addmin')
 @token_required
 def view_addmin(current_user):
+    if not current_user['Admin']:
+        return jsonify("you are not authorized to perform this action")
     try:
         conn=mysql.connect()
         cursor=conn.cursor(pymysql.cursors.DictCursor)
