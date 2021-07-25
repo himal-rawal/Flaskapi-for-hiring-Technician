@@ -70,9 +70,9 @@ def register_user():
 #To View Employee List eg carpenter
 @app.route('/api/view/employees')
 def view_employee():
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
     try:
-        conn=mysql.connect()
-        cursor=conn.cursor(pymysql.cursors.DictCursor)
         cursor.execute("SELECT name,skill,experience,gender,email,phone,address FROM hireme_emp WHERE admin=0")
         rows=cursor.fetchall()
         resp=jsonify(rows)
