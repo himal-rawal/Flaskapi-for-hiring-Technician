@@ -106,7 +106,6 @@ def get_specific_user(id):
 
 #------------------------------------------------------------------------------------
 #login User
-
 @app.route('/api/login', methods=['POST'])
 def login():
     try:
