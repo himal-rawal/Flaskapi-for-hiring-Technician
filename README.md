@@ -2,6 +2,8 @@
 # Api_Hireme
 
 This projects main goal is to hire technician. For that We are creating  Api to connect our frontend with backend. 
+The api link https://hireme007.herokuapp.com will not work as I have hosted it in https://www.freemysqlhosting.net/ and its trial had ended. 
+you can run it in local host
 
 ## Technologies
   - Frontend
