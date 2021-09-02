@@ -34,7 +34,7 @@ you can run it in local host
 - [Maintainers](#maintainers)
 
 
-(Note admin and  employee will share same table  there is coloumn in the database named **admin**  which is TINYINT data type . and we will set ** admin=1** in database manually to make any employee admin. Default value will be 0 i.e false.)
+
 
 ### 1. Register Employee
 **Request**
