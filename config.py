@@ -1,6 +1,6 @@
 from app import app
 from flaskext.mysql import MySQL
-'''
+''' #This is for hosting your database online
 mysql = MySQL()
 app.config['MYSQL_DATABASE_USER'] = 'sql6432877'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'VDx3sl5DZS'

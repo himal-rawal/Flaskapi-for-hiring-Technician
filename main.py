@@ -33,8 +33,8 @@ def token_required(f):
         return  f(current_user, *args, **kwargs)
     return decorated
 
-def token_required_client(f):
-    @wraps(f)
+def token_required_client(g):
+    @wraps(g)
     def decoratead(*args,**kwargs):
         token= None
         if 'x-acess-token' in request.headers:
@@ -47,13 +47,14 @@ def token_required_client(f):
             data=jwt.decode(token, app.config['SECRET_KEY'],algorithms=["HS256"])
             cursor.execute('SELECT  * FROM client  WHERE id=%s ', (data['id'],))
             current_user=cursor.fetchone()
+            print(current_user)
             #current_user = row['id']
         except :
             return  jsonify("token expired or is invalid")
         finally:
             cursor.close()
             conn.close()
-        return  f(current_user, *args, **kwargs)
+        return  g(current_user, *args, **kwargs)
     return decoratead
 
 @app.route('/api/register/employee', methods=['POST'])
